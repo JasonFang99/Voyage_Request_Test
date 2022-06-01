@@ -10,9 +10,9 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const AUTH_TOKEN = 'Token %s3e9ed2e0fa70a1a5cb6f34eb7a30ebde208ecd8f';
 
-axios.defaults.baseURL = 'https://voyages3-api.crc.rice.edu'; //'http://127.0.0.1:8000'//
-axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
-axios.defaults.headers.post['Content-Type'] = 'application/json';
+// axios.defaults.baseURL = 'https://voyages3-api.crc.rice.edu'; //'http://127.0.0.1:8000'//
+// axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
+// axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 // axios.post('/voyage/', {
 
