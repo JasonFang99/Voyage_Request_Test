@@ -14,15 +14,15 @@ axios.defaults.baseURL = 'https://voyages3-api.crc.rice.edu'; //'http://127.0.0.
 axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
-axios.post('/voyages', {
+// axios.post('/voyage/', {
 
-  })
-  .then(function (response) {
-    console.log(response);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+//   })
+//   .then(function (response) {
+//     console.log(response);
+//   })
+//   .catch(function (error) {
+//     console.log(error);
+//   });
 
 root.render(
   <React.StrictMode>

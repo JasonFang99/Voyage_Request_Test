@@ -53,30 +53,34 @@ class App extends Component {
     axios.defaults.headers.post['Content-Type'] = 'application/json';
     // axios.defaults.headers.post['Content-Type'] = 'text/plain';
 
-    // axios.post('/voyage/', {
+    axios.post('/voyage/', {
+      })
+      .then(function (response) {
+        console.log(response.data);
 
-    //   })
-    //   .then(function (response) {
-    //     console.log(response);
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
-
-
-    fetch('https://voyages3-api.crc.rice.edu/voyage/', {
-      method: 'POST',
-      headers: {
-        'Authorization': AUTH_TOKEN,
-        // 'content-type': 'application/json'
-        // 'Access-Control-Allow-Headers': 'Authorization',
-        
-      },
-      mode: 'cors'
-
-    }).then(res => res.json()).then(res=>{
-      console.log(res)
+        var arr = response.data.map((n) => {
+          return n.id
+        });
+        console.log(arr)
+      })
+      .catch(function (error) {
+        console.log(error);
       });
+
+
+    // fetch('https://voyages3-api.crc.rice.edu/voyage/', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Authorization': AUTH_TOKEN,
+    //     // 'content-type': 'application/json'
+    //     // 'Access-Control-Allow-Headers': 'Authorization',
+        
+    //   },
+    //   mode: 'cors'
+
+    // }).then(res => res.json()).then(res=>{
+    //   console.log(res)
+    //   });
   }
 
 
