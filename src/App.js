@@ -55,10 +55,9 @@ function App () {
   const [plot_field, setarrx] = useState([])
   const [plot_value, setarry] = useState([])
 
-  // const [option_field, setOption] = useState([])
+  // const [option_field, setField] = React.useState(scatter_plot_x_vars[0]);
+  // const [option_value, setValue] = React.useState(scatter_plot_y_vars[1]);
 
-  const [option_field, setField] = React.useState(scatter_plot_x_vars[0]);
-  const [option_value, setValue] = React.useState(scatter_plot_y_vars[1]);
   const [option, setOption] = useState({
     field: scatter_plot_x_vars[0],
     value: scatter_plot_y_vars[1]
@@ -79,17 +78,14 @@ function App () {
   const {sum, average} = aggregation;
 
   const handleChange_agg = (event) => {
-    
+    setAgg(event.target.value);
   };
 
-  const handleChange = (event) => {
-    console.log("before", option)
-    console.log("target", event.target)
+  const handleChange = (event, name) => {
     setOption({
       ...option,
-      [event.target.name]:event.target.value,
+      [name]: event.target.value,
     })
-    console.log("after", option)
   }
 
   // const handleChange_X = (event) => {
@@ -105,13 +101,15 @@ function App () {
     useEffect(() => {
       var group_by = option.field
       var value = option.value
+      var agg = aggregation
   
+      
       var data = new FormData();
       data.append('hierarchical', 'False');
   
-      data.append('groupby_fields', group_by)
-      data.append('groupby_fields', value)
-      data.append('agg_fn','sum')
+      data.append('groupby_fields', option.field)
+      data.append('groupby_fields', option.value)
+      data.append('agg_fn', aggregation)
       data.append('cachename','voyage_export')
   
       axios.post('/voyage/groupby', data=data)
@@ -120,30 +118,15 @@ function App () {
           setarrx(Object.keys(response.data[value]))
           setarry(Object.values(response.data[value]))
 
-          console.log(plot_value)
+          // console.log(plot_value)
           
         })
         .catch(function (error) {
           console.log(error);
         });
 
-    }, [option.field, option.value]);
+    }, [option.field, option.value, aggregation]);
 
-    // fetch('https://voyages3-api.crc.rice.edu/voyage/', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Authorization': AUTH_TOKEN,
-    //     // 'content-type': 'application/json'
-    //   },
-
-    //   data: {
-    //     'hierarchical': 'False'
-    //   }
-
-    // }).then(res => res.json()).then(res=>{
-    //   console.log(res)
-    //   });
-  // }
 
     return (
       <div>
@@ -155,8 +138,7 @@ function App () {
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={option.field}
-                label="field"
-                onChange={handleChange}
+                onChange={(event) => {handleChange(event, "field")}}
                 name="field"
               >
                 {scatter_plot_x_vars.map((option) => (
@@ -175,9 +157,8 @@ function App () {
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={option.value}
-                label="value"
                 name="value"
-                onChange={handleChange}
+                onChange={(event) => {handleChange(event, "value")}}
               >
                 {scatter_plot_y_vars.map((option) => (
                   <MenuItem value={option}>
@@ -190,20 +171,20 @@ function App () {
             </FormControl>
           </Box>
         </div>
-        {/* <div>
+        <div>
           <FormControl>
             <FormLabel id="demo-controlled-radio-buttons-group">Aggregation Function</FormLabel>
             <RadioGroup
               aria-labelledby="demo-controlled-radio-buttons-group"
               name="controlled-radio-buttons-group"
-              value={value}
-              onChange={handleChange}
+              value={aggregation}
+              onChange={handleChange_agg}
             >
               <FormControlLabel value="sum" control={<Radio />} label="Sum" />
-              <FormControlLabel value="average" control={<Radio />} label="Average" />
+              <FormControlLabel value="mean" control={<Radio />} label="Average" />
             </RadioGroup>
           </FormControl>
-        </div> */}
+        </div>
       
         <div>
           <Plot
@@ -217,7 +198,7 @@ function App () {
               },
               {type: 'bar'},
             ]}
-            layout={ {width: 1000, height: 500, title: 'A Fancy Plot'} }
+            layout={ {width: 1000, height: 500, title: 'Scatter Plot'} }
           />
         </div>
       </div>
@@ -241,4 +222,17 @@ function groupBySum(data, key, value) {
 
 export default App;
 
+    // fetch('https://voyages3-api.crc.rice.edu/voyage/', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Authorization': AUTH_TOKEN,
+    //     // 'content-type': 'application/json'
+    //   },
 
+    //   data: {
+    //     'hierarchical': 'False'
+    //   }
+
+    // }).then(res => res.json()).then(res=>{
+    //   console.log(res)
+    //   });
