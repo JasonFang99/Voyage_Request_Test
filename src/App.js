@@ -1,97 +1,58 @@
 import logo from './logo.svg';
 import './App.css';
-import React, { Component, PureComponent } from 'react'
+import React, { Component, PureComponent, useState } from 'react'
 import { Form, Input, InputNumber, Radio, Modal, Cascader ,Tree} from 'antd'
 import axios from 'axios'
+import Plot from 'react-plotly.js';
+
+const option_url = '/voyage/' + '?hierarchical=false'
 
 
-class App extends Component {
-  constructor() {
-    super()
-    this.state={}
+// var plot_field = []
+// var plot_value = []
+
+
+
+function App () {
   
-    this.handleClick = this.handleClick.bind(this)
-  }
+  const [plot_field, setarrx] = useState([])
+  const [plot_value, setarry] = useState([])
 
-  handleClick() {
-    const AUTH_TOKEN = 'Token 3e9ed2e0fa70a1a5cb6f34eb7a30ebde208ecd8f';
+  function handleClick() {
+
+    const AUTH_TOKEN = 'Token 0bfda2118118484d52aeec86812269aadeb37c67';
 
     axios.defaults.baseURL = 'https://voyages3-api.crc.rice.edu'; //'http://127.0.0.1:8000'
     axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
     // axios.defaults.headers.post['Content-Type'] = 'application/json';
     // axios.defaults.headers.post['Content-Type'] = 'text/plain';
 
-    
-    
+
+    var group_by = 'voyage_itinerary__imp_principal_place_of_slave_purchase__geo_location__name'
+    var value = "voyage_slaves_numbers__imp_total_num_slaves_disembarked"
+
     var data = new FormData();
     data.append('hierarchical', 'False');
 
-    // data.append("voyage_itinerary__imp_principal_region_slave_dis__region","Barbados")
-    data.append('groupby_fields','voyage_itinerary__principal_port_of_slave_dis__place')
-    data.append('value_field_tuple','voyage_slaves_numbers__imp_total_num_slaves_disembarked')
-    data.append('value_field_tuple','sum')
-    data.append('cachename','voyage_export')
-
-    // var data = JSON.stringify({
-    //   "hierarchical": "False",
-    //   "voyage_ship__imputed_nationality__name": "U.S.A"
-    // })
-
-    // data.append('voyage_itinerary__imp_principal_region_slave_dis__region', 'Barbados');
-
+    data.append('groupby_fields', group_by)
+    data.append('value_field_tuple', value)
+    data.append('value_field_tuple','sum')
+    data.append('cachename','voyage_export')
 
     axios.post('/voyage/groupby', data=data)
       .then(function (response) {
 
-        // console.log(response.data);
-        // console.log(response.data[0].voyage_itinerary__imp_principal_region_slave_dis__region)
-
-        // var arr = response.data.map((n) => {
-        //   return n.voyage_itinerary.imp_port_voyage_begin.region.region
+        setarrx(Object.keys(response.data[value]))
+        setarry(Object.values(response.data[value]))
+        // var arr = response.data[value].map((n) => {
+        //   return n
         // });
-
-
-        function groupBySum(data, key, value) {
-          var pair = {}
-          for(var j in data){
-            if(!pair[data[j][key]]) {
-              pair[data[j][key]] = data[j][value]
-            }
-            else{
-              pair[data[j][key]] += data[j][value]
-            }
-          }
-          return pair
-        }
-
-        var key = "voyage_ship__imputed_nationality__name"
-        var value = "voyage_itinerary__imp_broad_region_voyage_begin__value"
-        // console.log(groupBySum(response.data, key, value))
-
-        var data = response.data.replaceAll("NaN", "null")
-        console.log(data)
-        console.log(JSON.parse(data))
-        // console.log(typeof response.data)
-        console.log(Object.keys(response.data).length)
-
-        
-
-        // console.log(Object.keys(response.data))
-        // for(var k in keys) {
-        //   var sum = 0;
-        //   for(var r in [...Array(response.data.length).keys()]){
-        //     sum += response.data[r][k]
-        //   }
-        // }
-
+        console.log(plot_value)
         
       })
       .catch(function (error) {
         console.log(error);
       });
-
-
-
 
 
     // fetch('https://voyages3-api.crc.rice.edu/voyage/', {
@@ -112,14 +73,46 @@ class App extends Component {
 
 
 
-  render() {
-    return (
-      <div className='button_container'>
-        <button className='button' onClick={this.handleClick}>Click Me</button>
-      </div>
-    )
-  }
 
+    return (
+      <div>
+        <div className='button_container'>
+          <button className='button' onClick={handleClick}>Click Me</button>
+        </div>
+        <div>
+          <Plot
+            data={[
+              {
+                x: plot_field,
+                y: plot_value,
+                type: 'bar',
+                mode: 'lines+markers',
+                marker: {color: 'red'},
+              },
+              {type: 'bar'},
+            ]}
+            layout={ {width: 1000, height: 500, title: 'A Fancy Plot'} }
+          />
+        </div>
+      </div>
+      
+      
+    )
+  
+
+}
+
+function groupBySum(data, key, value) {
+  var pair = {}
+  for(var j in data){
+    if(!pair[data[j][key]]) {
+      pair[data[j][key]] = data[j][value]
+    }
+    else{
+      pair[data[j][key]] += data[j][value]
+    }
+  }
+  return pair
 }
 
 export default App;
