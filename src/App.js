@@ -15,39 +15,12 @@ import FormLabel from '@mui/material/FormLabel';
 import Radio from '@mui/material/Radio';
 
 
-const option_url = '/voyage/' + '?hierarchical=false'
+const option_url = '/voyage/' + '?hierarchical=false' // labels in dropdowns
 
 const AUTH_TOKEN = 'Token 30da72e68ebc2beeaaf69a15dcfc56844fb7e05d';
 
-axios.defaults.baseURL = 'https://voyages3-api.crc.rice.edu'; //'http://127.0.0.1:8000'
+axios.defaults.baseURL = 'https://voyages3-api.crc.rice.edu'; //'change to environment setting'
 axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
-
-var scatter_plot_x_vars=[
-  'voyage_dates__imp_arrival_at_port_of_dis_yyyy',
-  'voyage_dates__imp_length_home_to_disembark',
-  'voyage_dates__length_middle_passage_days',
-  'voyage_crew__crew_voyage_outset',
-  'voyage_crew__crew_first_landing',
-  'voyage_slaves_numbers__imp_total_num_slaves_embarked',
-  'voyage_slaves_numbers__imp_total_num_slaves_disembarked'
-  ]
-
-var scatter_plot_y_vars=[
-  'voyage_slaves_numbers__imp_total_num_slaves_embarked',
-  'voyage_slaves_numbers__imp_total_num_slaves_disembarked',
-  'voyage_slaves_numbers__percentage_female',
-  'voyage_slaves_numbers__percentage_male',
-  'voyage_slaves_numbers__percentage_child',
-  'voyage_slaves_numbers__percentage_men_among_embarked_slaves',
-  'voyage_slaves_numbers__percentage_women_among_embarked_slaves',
-  'voyage_slaves_numbers__imp_mortality_ratio',
-  'voyage_slaves_numbers__imp_jamaican_cash_price',
-  'voyage_slaves_numbers__percentage_boys_among_embarked_slaves',
-  'voyage_slaves_numbers__percentage_girls_among_embarked_slaves',
-  'voyage_ship__tonnage_mod',
-  'voyage_crew__crew_voyage_outset',
-  'voyage_crew__crew_first_landing'
-]
 
 
 function App () {
@@ -64,17 +37,6 @@ function App () {
   })
 
   const [aggregation, setAgg] = React.useState('sum');
-
-  // const [option_agg, setAgg] = Reacct.
-  // const [value, setField] = React.useState('');
-
-  // const handleChange = (event) => {
-  //   setAgg({
-  //     ...aggregation,
-  //     [event.target.name]: event.target.checked,
-  //   });
-  // }
-
   const {sum, average} = aggregation;
 
   const handleChange_agg = (event) => {
@@ -87,23 +49,12 @@ function App () {
       [name]: event.target.value,
     })
   }
-
-  // const handleChange_X = (event) => {
-  //   setField(event.target.value);
-  // };
-  // const handleChange_Y = (event) => {
-  //   setValue(event.target.value);
-  // };
-
-
-    // axios.defaults.headers.post['Content-Type'] = 'application/json';
-    // axios.defaults.headers.post['Content-Type'] = 'text/plain';
     useEffect(() => {
       var group_by = option.field
       var value = option.value
       var agg = aggregation
   
-      
+
       var data = new FormData();
       data.append('hierarchical', 'False');
   
@@ -117,8 +68,6 @@ function App () {
   
           setarrx(Object.keys(response.data[value]))
           setarry(Object.values(response.data[value]))
-
-          // console.log(plot_value)
           
         })
         .catch(function (error) {
@@ -165,7 +114,6 @@ function App () {
                     {option}
                   </MenuItem>
                 ))}
-                {/* <MenuItem value={scatter_plot_x_vars}>{scatter_plot_x_vars}</MenuItem> */}
 
               </Select>
             </FormControl>
@@ -221,18 +169,3 @@ function groupBySum(data, key, value) {
 }
 
 export default App;
-
-    // fetch('https://voyages3-api.crc.rice.edu/voyage/', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Authorization': AUTH_TOKEN,
-    //     // 'content-type': 'application/json'
-    //   },
-
-    //   data: {
-    //     'hierarchical': 'False'
-    //   }
-
-    // }).then(res => res.json()).then(res=>{
-    //   console.log(res)
-    //   });
