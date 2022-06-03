@@ -13,7 +13,7 @@ import Select from '@mui/material/Select';
 import { FormControlLabel, RadioGroup } from '@mui/material';
 import FormLabel from '@mui/material/FormLabel';
 import Radio from '@mui/material/Radio';
-
+import {scatter_plot_x_vars, scatter_plot_y_vars} from './var.js'
 
 const option_url = '/voyage/' + '?hierarchical=false' // labels in dropdowns
 
@@ -24,20 +24,16 @@ axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
 
 
 function App () {
-  
   const [plot_field, setarrx] = useState([])
   const [plot_value, setarry] = useState([])
-
-  // const [option_field, setField] = React.useState(scatter_plot_x_vars[0]);
-  // const [option_value, setValue] = React.useState(scatter_plot_y_vars[1]);
-
   const [option, setOption] = useState({
     field: scatter_plot_x_vars[0],
     value: scatter_plot_y_vars[1]
   })
-
   const [aggregation, setAgg] = React.useState('sum');
-  const {sum, average} = aggregation;
+  // const {sum, average} = aggregation;
+  const [label, setLabel] = useState()
+
 
   const handleChange_agg = (event) => {
     setAgg(event.target.value);
@@ -53,7 +49,6 @@ function App () {
       var group_by = option.field
       var value = option.value
       var agg = aggregation
-  
 
       var data = new FormData();
       data.append('hierarchical', 'False');
@@ -76,6 +71,19 @@ function App () {
 
     }, [option.field, option.value, aggregation]);
 
+    useEffect(() => {
+      axios.options(option_url)
+        .then(function (response) {
+          
+          setLabel(response.data)
+          // console.log(label['id']['flatlabel'])
+
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+    }, []
+    );
 
     return (
       <div>
@@ -92,7 +100,7 @@ function App () {
               >
                 {scatter_plot_x_vars.map((option) => (
                   <MenuItem value={option}>
-                    {option}
+                    {label[option]['flatlabel']}
                   </MenuItem>
                 ))}
 
@@ -111,7 +119,7 @@ function App () {
               >
                 {scatter_plot_y_vars.map((option) => (
                   <MenuItem value={option}>
-                    {option}
+                    {label[option]['flatlabel']}
                   </MenuItem>
                 ))}
 
@@ -153,19 +161,6 @@ function App () {
     )
   
 
-}
-
-function groupBySum(data, key, value) {
-  var pair = {}
-  for(var j in data){
-    if(!pair[data[j][key]]) {
-      pair[data[j][key]] = data[j][value]
-    }
-    else{
-      pair[data[j][key]] += data[j][value]
-    }
-  }
-  return pair
 }
 
 export default App;

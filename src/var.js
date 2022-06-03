@@ -1,4 +1,5 @@
-var scatter_plot_x_vars=[
+  
+ export var scatter_plot_x_vars=[
     'voyage_dates__imp_arrival_at_port_of_dis_yyyy',
     'voyage_dates__imp_length_home_to_disembark',
     'voyage_dates__length_middle_passage_days',
@@ -8,7 +9,7 @@ var scatter_plot_x_vars=[
     'voyage_slaves_numbers__imp_total_num_slaves_disembarked'
     ]
   
-  var scatter_plot_y_vars=[
+  export var scatter_plot_y_vars=[
     'voyage_slaves_numbers__imp_total_num_slaves_embarked',
     'voyage_slaves_numbers__imp_total_num_slaves_disembarked',
     'voyage_slaves_numbers__percentage_female',
